@@ -1,0 +1,9 @@
+1 a number of sockets * number of cores * number of threads = number of cpus
+  b 4
+  c 8
+  d 3.2GHz
+  e x86
+  f meminfo (mem free) 7.1 GB
+  g vmstat -f (number of forks) cat stat | grep "ctxt"
+
+3 b pstree -ps <pid>
