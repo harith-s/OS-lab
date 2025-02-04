@@ -1,5 +1,5 @@
 all: 
-	gcc my_shell.c -o shell
+	gcc -g my_shell.c -o shell
 	./shell
 .PHONY: clean
 
