@@ -1,0 +1,19 @@
+	mkfifo(myfifo, 0666);
+
+	int named_pipe_fd = open(myfifo, O_WRONLY);
+	write(named_pipe_fd, arr2, strlen(arr2)+1);
+	close(named_pipe_fd);
+
+	named_pipe_fd = open(myfifo, O_WRONLY);
+	write(named_pipe_fd, arr2, strlen(arr2)+1);
+	close(named_pipe_fd);
+
+	named_pipe_fd = open(myfifo, O_WRONLY);
+	write(named_pipe_fd, arr2, strlen(arr2)+1);
+	close(named_pipe_fd);
+	
+	sleep(5);
+
+	named_pipe_fd = open(myfifo, O_WRONLY);
+	write(named_pipe_fd, arr2, strlen(arr2)+1);
+	close(named_pipe_fd);
