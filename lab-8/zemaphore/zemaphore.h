@@ -1,7 +1,10 @@
 #include <pthread.h>
 
 typedef struct zemaphore {
-    
+    int counter;
+    pthread_mutex_t lock;
+    pthread_cond_t cv;
+
 } zem_t;
 
 void zem_init(zem_t *, int);

@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "barrier.h": "c",
+        "spinlock.h": "c"
+    }
+}

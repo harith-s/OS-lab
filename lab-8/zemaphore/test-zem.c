@@ -15,9 +15,10 @@ zem_t parent;
 void *justprint(void *data)
 {
   int thread_id = *((int *)data);
+
   zem_down(&child);
-  printf("This is thread %d\n", thread_id);
   zem_up(&parent);
+  printf("This is thread %d\n", thread_id);
   return 0;
 }
 
