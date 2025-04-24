@@ -153,19 +153,32 @@ int sys_waitpid(void)
 ////////////////// End of new addition /////////////////
 /////////// Parts D and E of threads lab/////////
 int sys_sleepChan(void) {
-  return -1;
+  int arg;
+  if (argint(0, &arg) < 0){
+    return -1;
+  }
+
+  return sleepChan(arg);
 }
 
 int sys_getChannel(void) {
-  return -1;
+  return getChannel();
 }
 
 int sys_sigChan(void) {
-  return -1;
+  int arg;
+  if (argint(0, &arg) < 0){
+    return -1;
+  }
+  return sigChan(arg);
 }
 
 int sys_sigOneChan(void) {
-  return -1;
+  int arg;
+  if (argint(0, &arg) < 0){
+    return -1;
+  }
+  return sigOneChan(arg);
 }
 /////////// End of Parts D and E of threads lab/////////
 

@@ -111,6 +111,7 @@ found:
   p->context = (struct context*)sp;
   memset(p->context, 0, sizeof *p->context);
   p->context->eip = (uint)forkret;
+  p->curr_channel = 0;
 
   return p;
 }
@@ -295,8 +296,8 @@ wait(void)
       if(p->state == ZOMBIE){
         // Found one.
         for(t = ptable.proc; t < &ptable.proc[NPROC]; t++){
-          if (t->main_thread == p && p->main_thread != p){
-            cprintf("Reaped thread %d\n", t->pid);
+          if (t->main_thread->pid == p->pid && t->pid != p->pid && t->state != UNUSED){
+            cprintf("Reaped thread %p\n", t->pid);
             kfree(t->kstack);
             t->kstack = 0;
             t->pid = 0;
@@ -608,6 +609,7 @@ int thread_create(uint* tid, void* func_ptr, void * arg_ptr){
   if((np = allocproc()) == 0){
     return -1;
   }
+  // cprintf("Created a thread with pid: %d", np->pid);
   np->main_thread = myproc();
   uint mem = (uint)curproc->sz;
   
@@ -737,4 +739,72 @@ int thread_join(uint tid){
     // Wait for children to exit.  (See wakeup1 call in proc_exit.)
     sleep(curproc, &ptable.lock);  //DOC: wait-sleep
   }
+}
+
+int getChannel(void){
+  int to_return = nextpid;
+  nextpid++;
+  return to_return;
+} 
+
+int sleepChan(int chan){
+  struct proc *p;
+  acquire(&ptable.lock);
+
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if (p->pid == chan && p->state != UNUSED){
+      panic("Channel used as pid");
+    }
+  }
+  p = myproc();
+  p->state = SLEEPING;
+  p->chan = (void *)chan;
+  sleep((void *)p->chan, &ptable.lock);
+
+  p->chan = 0;
+  
+  release(&ptable.lock);
+  return 0;
+}
+
+int sigChan(int chan){
+
+  struct proc *p;
+  acquire(&ptable.lock);
+
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if (p->pid == chan && p->state != UNUSED){
+      panic("Channel used as pid");
+    }
+  }
+
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if ((int)p->chan == chan && p->state == SLEEPING){
+      p->state = RUNNABLE;
+    }
+  }
+
+  release(&ptable.lock);
+  return 0;
+
+}
+
+int sigOneChan(int chan){
+  struct proc *p;
+  acquire(&ptable.lock);
+
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if (p->pid == chan && p->state != UNUSED){
+      panic("Channel used as pid");
+    }
+  }
+
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if ((int)p->chan == chan && p->state == SLEEPING){
+      p->state = RUNNABLE;
+      break;
+    }
+  }
+  release(&ptable.lock);
+  return 0;
 }

@@ -14,8 +14,10 @@ void* thread2(void* arg){
     printf(1,"Acquired lock successfully\n");
     int* argPtr = t->x;
     *argPtr = (*argPtr + 1);
+    // sleep(200);
     broadcast(t->cv);
     releaseLock(t->l);
+
     thread_exit();
     return 0;
 }

@@ -124,6 +124,11 @@ int             waitpid(int);
 int             thread_create(uint*, void*, void*);
 int             thread_exit(void);
 int             thread_join(uint);
+int             getChannel(void);
+int             sleepChan(int);
+int             sigChan(int);
+int             sigOneChan(int);
+
 
 // swtch.S
 void            swtch(struct context**, struct context*);

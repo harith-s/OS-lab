@@ -50,6 +50,8 @@ struct proc {
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
   struct proc * main_thread;
+  int avail_channels[N_CHANNELS];
+  int curr_channel;
 };
 
 // Process memory is laid out contiguously, low addresses first:
